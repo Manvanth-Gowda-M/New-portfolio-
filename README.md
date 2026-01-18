@@ -1,102 +1,61 @@
-# Manvanth Gowda M - Portfolio Website
+# Manvanth Gowda M - Universal Motion Portfolio
 
-![Portfolio Banner](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)
-![GitHub](https://img.shields.io/badge/GitHub-Pages-blue?style=for-the-badge&logo=github)
+![Portfolio Status](https://img.shields.io/badge/Status-Live-00E5FF?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Stack-Vanilla%20JS--CSS3--HTML5-blue?style=for-the-badge)
 
-> **Rooted in Soil. Driven by Knowledge.**
+> **Engineering Ideas Into Reality.**
 
-A premium, cinematic portfolio website blending agriculture, nature, and technology through sophisticated motion design and organic interactions.
+A premium, interactive portfolio website for a Computer Science Engineering student and Software Developer. This site features a **Universal Motion System** designed to feel alive on mobile, tablet, and desktop.
 
-## 🌾 About
+## 🚀 Vision
 
-This portfolio showcases the journey of **Manvanth Gowda M**, a modern farmer-technologist who bridges traditional farming wisdom with cutting-edge innovation. The website features:
+This portfolio represents **Manvanth Gowda M**, focusing on the intersection of technical engineering and creative motion design. It is built with a mobile-first philosophy, ensuring that the "premium" feel isn't lost on smaller screens.
 
-- **Cinematic Hero Section** with animated text reveals and parallax effects
-- **Scroll-based Animations** that feel natural and purposeful
-- **GitHub Projects Integration** displaying real-world work
-- **Dark/Light Theme Toggle** with smooth transitions
-- **Organic Motion Design** inspired by growth and nature
-- **Premium Typography** and handcrafted aesthetics
-- **Fully Responsive** across all devices
+## ✨ Key Features
 
-## 🚀 Features
+### 🌪️ Universal Motion System
+- **Device Awareness**: Custom animations tailored for touch vs. mouse interaction.
+- **Kinetic Typography**: Animated hero text reveals that scale with screen size.
+- **Scroll-Triggered Reveals**: Purposeful content reveals using `IntersectionObserver`.
+- **GPU-Friendly**: Optimized with `transform` and `opacity` to ensure 60fps on all devices.
 
-### Design & Animation
-- Custom cursor with magnetic hover effects
-- Parallax scrolling backgrounds
-- Word-by-word text reveal animations
-- Smooth scroll-triggered content reveals
-- Growth-inspired skill visualizations
-- Floating particle system
+### 🎨 Premium Design
+- **Default Dark Mode**: Deep charcoal background with electric cyan accents.
+- **Light Mode Support**: Clean, high-contrast theme for better readability.
+- **Subtle Grain**: A custom noise overlay for added depth and handcrafted feel.
+- **Mesh Gradients**: Sophisticated background visuals.
 
-### Technical Highlights
-- Pure vanilla JavaScript (no frameworks)
-- Modern CSS with custom properties
-- Intersection Observer API for performance
-- GitHub API integration for dynamic projects
-- Optimized for 60fps animations
-- GPU-accelerated transforms
+### 🛠️ Technical Excellence
+- **Vanilla JavaScript**: Zero heavy frameworks, ensuring blazing-fast load times.
+- **GitHub Integration**: Dynamic project fetching directly from [@appukannadiga](https://github.com/appukannadiga).
+- **Responsive Layout**: Mobile-first CSS with modern grid and flexbox.
+- **Accessibility**: Respects `prefers-reduced-motion` and semantic HTML standards.
 
-### Sections
-1. **Hero** - Cinematic introduction with parallax
-2. **About** - Storytelling with animated plant growth
-3. **Skills** - Interactive expertise cards
-4. **Projects** - Dynamic GitHub repository showcase
-5. **Impact** - Animated counter statistics
-6. **Knowledge** - Book animation linking to portfolio
-7. **Contact** - Social links with premium interactions
+## 📂 Structure
+
+1. **Hero**: Kinetic typography reveal with mesh gradient.
+2. **About**: Scroll-based storytelling focusing on CSE and Software Dev.
+3. **Skills**: Interactive expertise nodes (Frontend, Backend, Tools, Core CS).
+4. **Work**: Dynamic project showcase powered by the GitHub API.
+5. **Creative**: Link to the experimental book portfolio ([manvanth.vercel.app](https://manvanth.vercel.app/)).
+6. **Contact**: Premium touch-friendly social links and contact form.
 
 ## 🛠️ Tech Stack
 
-- **HTML5** - Semantic structure
-- **CSS3** - Modern animations and layouts
-- **JavaScript ES6+** - Interactive functionality
-- **GitHub API** - Dynamic project loading
-- **Google Fonts** - Cormorant Garamond & Inter
+- **HTML5**: Semantic structure.
+- **CSS3**: Modern animations, custom properties, and grain effects.
+- **JavaScript (ES6+)**: Intersection Observer, dynamic API fetching, and custom cursors.
+- **GitHub API**: Dynamic repository showcase.
 
-## 📱 Contact
+## 📱 Links
 
-- **Email:** [appumanu3214@gmail.com](mailto:appumanu3214@gmail.com)
-- **GitHub:** [@appukannadiga](https://github.com/appukannadiga)
-- **LinkedIn:** [Manvanth Gowda M](https://www.linkedin.com/in/manvanth-gowda-m-50288039b)
-- **Instagram:** [@appu_kannadigaa](https://www.instagram.com/appu_kannadigaa)
-- **Knowledge Portfolio:** [manvanth.vercel.app](https://manvanth.vercel.app/)
-
-## 🎨 Design Philosophy
-
-The website embodies:
-- **Earthy but premium** - Natural colors with sophisticated execution
-- **Calm and confident** - Purposeful motion, not flashy effects
-- **Documentary-style** - Authentic storytelling
-- **Trust-building** - Approachable for farmers, admirable for designers
-- **Handcrafted** - Custom-built, not template-based
-
-## 🌱 Color Palette
-
-### Light Mode
-- Deep soil brown (#7D5E3F)
-- Leaf green (#4A7C59)
-- Warm sunlight yellow (#D4A574)
-- Natural paper white (#FDFBF7)
-
-### Dark Mode
-- Dark forest green (#1A2520)
-- Soft green glow (#6BA87F)
-- Muted beige (#B8956D)
-- Gentle highlights
-
-## ⚡ Performance
-
-- Optimized animations using CSS transforms
-- Lazy loading for off-screen content
-- Throttled scroll events
-- Reduced motion support for accessibility
-- Mobile-first responsive design
-
-## 📄 License
-
-© 2024 Manvanth Gowda M. All rights reserved.
+- **LinkedIn**: [Manvanth Gowda M](https://www.linkedin.com/in/manvanth-gowda-m-50288039b)
+- **GitHub**: [@appukannadiga](https://github.com/appukannadiga)
+- **Instagram**: [@appu_kannadigaa](https://www.instagram.com/appu_kannadigaa)
+- **Creative Portfolio**: [manvanth.vercel.app](https://manvanth.vercel.app/)
+- **Email**: [appumanu3214@gmail.com](mailto:appumanu3214@gmail.com)
 
 ---
 
-**Built with care** 🌾 Handcrafted with purpose 🚜 Powered by knowledge 📚
+**Handcrafted with care by Manvanth Gowda M.**
+*Engineering Ideas Into Reality.*
