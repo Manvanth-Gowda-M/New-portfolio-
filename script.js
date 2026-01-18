@@ -1,438 +1,176 @@
-// Theme Management
-const themeToggle = document.getElementById('themeToggle');
-const html = document.documentElement;
-
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-}
-
-themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    document.body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-});
-
-// Custom Cursor
-const cursor = document.getElementById('cursor');
-const cursorFollower = document.getElementById('cursorFollower');
-
-let mouseX = 0;
-let mouseY = 0;
-let cursorX = 0;
-let cursorY = 0;
-let followerX = 0;
-let followerY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-function animateCursor() {
-    const speed = 0.2;
-    const followerSpeed = 0.1;
-    
-    cursorX += (mouseX - cursorX) * speed;
-    cursorY += (mouseY - cursorY) * speed;
-    
-    followerX += (mouseX - followerX) * followerSpeed;
-    followerY += (mouseY - followerY) * followerSpeed;
-    
-    cursor.style.left = cursorX + 'px';
-    cursor.style.top = cursorY + 'px';
-    
-    cursorFollower.style.left = followerX + 'px';
-    cursorFollower.style.top = followerY + 'px';
-    
-    requestAnimationFrame(animateCursor);
-}
-
-animateCursor();
-
-// Cursor hover effects
-const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-card');
-
-hoverElements.forEach(element => {
-    element.addEventListener('mouseenter', () => {
-        cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
-    });
-    
-    element.addEventListener('mouseleave', () => {
-        cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-    });
-});
-
-// Navigation Hide/Show on Scroll
-let lastScrollTop = 0;
-const nav = document.getElementById('nav');
-
-window.addEventListener('scroll', () => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    if (scrollTop > lastScrollTop && scrollTop > 100) {
-        nav.classList.add('hidden');
-    } else {
-        nav.classList.remove('hidden');
-    }
-    
-    lastScrollTop = scrollTop;
-});
-
-// Parallax Effect for Hero
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const layers = document.querySelectorAll('.parallax-layer');
-    
-    layers.forEach((layer, index) => {
-        const speed = (index + 1) * 0.3;
-        layer.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-});
-
-// Hero Text Animation
 document.addEventListener('DOMContentLoaded', () => {
-    const words = document.querySelectorAll('.word');
-    const subtitle = document.querySelector('.hero-subtitle');
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
     
-    words.forEach(word => {
-        const delay = parseFloat(word.getAttribute('data-delay')) * 1000;
-        setTimeout(() => {
-            word.style.animationDelay = '0s';
-            word.style.opacity = '0';
-            word.style.animation = 'wordReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
-        }, delay);
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    body.setAttribute('data-theme', savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     });
-});
 
-// Particle Animation
-function createParticles() {
-    const particlesContainer = document.getElementById('particles');
-    const particleCount = 30;
+    // Custom Cursor (Desktop only)
+    const dot = document.querySelector('.cursor-dot');
+    const outline = document.querySelector('.cursor-outline');
     
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        const startX = Math.random() * window.innerWidth;
-        const startY = Math.random() * window.innerHeight;
-        const floatX = (Math.random() - 0.5) * 200;
-        const floatY = -Math.random() * 300 - 100;
-        const delay = Math.random() * 10;
-        const duration = 15 + Math.random() * 10;
-        
-        particle.style.left = startX + 'px';
-        particle.style.top = startY + 'px';
-        particle.style.setProperty('--float-x', floatX + 'px');
-        particle.style.setProperty('--float-y', floatY + 'px');
-        particle.style.animationDelay = delay + 's';
-        particle.style.animationDuration = duration + 's';
-        
-        particlesContainer.appendChild(particle);
-    }
-}
-
-createParticles();
-
-// Intersection Observer for Scroll Animations
-const observerOptions = {
-    threshold: 0.2,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+    if (dot && outline) {
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
             
-            if (entry.target.classList.contains('impact-card')) {
-                animateCounter(entry.target);
-            }
+            dot.style.opacity = '1';
+            outline.style.opacity = '1';
             
-            if (entry.target.classList.contains('plant-stage')) {
-                entry.target.style.animation = `growPlant 2s ease forwards`;
-            }
-        }
-    });
-}, observerOptions);
-
-// Observe elements
-document.querySelectorAll('.reveal-text, .reveal-line, .skill-card, .project-card, .impact-card, .plant-stage').forEach(el => {
-    observer.observe(el);
-});
-
-// Counter Animation
-function animateCounter(card) {
-    const numberElement = card.querySelector('.impact-number');
-    if (!numberElement || numberElement.dataset.animated) return;
-    
-    const target = parseInt(numberElement.getAttribute('data-target'));
-    const duration = 2000;
-    const step = target / (duration / 16);
-    let current = 0;
-    
-    numberElement.dataset.animated = 'true';
-    
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            numberElement.textContent = target;
-            clearInterval(timer);
-        } else {
-            numberElement.textContent = Math.floor(current);
-        }
-    }, 16);
-}
-
-// Fetch GitHub Projects
-async function fetchGitHubProjects() {
-    const username = 'appukannadiga';
-    const projectsGrid = document.getElementById('projectsGrid');
-    
-    try {
-        const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch repositories');
-        }
-        
-        const repos = await response.json();
-        
-        projectsGrid.innerHTML = '';
-        
-        repos.forEach((repo, index) => {
-            const projectCard = createProjectCard(repo, index);
-            projectsGrid.appendChild(projectCard);
+            dot.style.transform = `translate(${posX}px, ${posY}px)`;
             
-            setTimeout(() => {
-                observer.observe(projectCard);
-            }, 100);
+            // Outline follows with a slight delay
+            outline.animate({
+                transform: `translate(${posX - 16}px, ${posY - 16}px)`
+            }, { duration: 500, fill: 'forwards' });
         });
         
-    } catch (error) {
-        console.error('Error fetching GitHub projects:', error);
-        projectsGrid.innerHTML = `
-            <div class="project-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <p style="color: var(--text-secondary);">Projects are being cultivated. Visit <a href="https://github.com/${username}" target="_blank" rel="noopener noreferrer" style="color: var(--accent-green);">GitHub</a> to explore.</p>
-            </div>
-        `;
-    }
-}
+        document.addEventListener('mouseleave', () => {
+            dot.style.opacity = '0';
+            outline.style.opacity = '0';
+        });
 
-function createProjectCard(repo, index) {
-    const card = document.createElement('div');
-    card.className = 'project-card animate-on-scroll';
-    card.style.transitionDelay = `${index * 0.1}s`;
-    
-    const description = repo.description || 'A project cultivated with care and attention to detail.';
-    const language = repo.language || 'Code';
-    
-    const emojis = ['🌱', '🌿', '🌾', '🌳', '🍃', '🌻'];
-    const emoji = emojis[index % emojis.length];
-    
-    card.innerHTML = `
-        <div class="project-image">${emoji}</div>
-        <div class="project-content">
-            <h3 class="project-title">${repo.name}</h3>
-            <p class="project-description">${description}</p>
-            <div class="project-tags">
-                ${language ? `<span class="project-tag">${language}</span>` : ''}
-                ${repo.stargazers_count > 0 ? `<span class="project-tag">⭐ ${repo.stargazers_count}</span>` : ''}
-                ${repo.forks_count > 0 ? `<span class="project-tag">🍴 ${repo.forks_count}</span>` : ''}
-            </div>
-            <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link">
-                <span>View Project</span>
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Smooth Scroll for Navigation Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        
-        if (target) {
-            const offsetTop = target.offsetTop - 80;
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
+        // Hover effects
+        const links = document.querySelectorAll('a, button, .project-card, .skill-card');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                outline.style.transform = 'scale(1.5)';
+                outline.style.borderColor = 'var(--accent)';
+                outline.style.backgroundColor = 'var(--accent-glow)';
             });
-        }
-    });
-});
+            link.addEventListener('mouseleave', () => {
+                outline.style.transform = 'scale(1)';
+                outline.style.borderColor = 'var(--accent)';
+                outline.style.backgroundColor = 'transparent';
+            });
+        });
+    }
 
-// Plant Growth Animation Trigger
-const growthAnimation = document.querySelector('.growth-animation');
-if (growthAnimation) {
-    const growthObserver = new IntersectionObserver((entries) => {
+    // Scroll Reveal Animation
+    const revealElements = document.querySelectorAll('.reveal-up');
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const stages = entry.target.querySelectorAll('.plant-stage');
-                stages.forEach((stage, index) => {
-                    setTimeout(() => {
-                        stage.style.opacity = '1';
-                        stage.style.animation = `growPlant 2s ease forwards`;
-                    }, index * 500);
-                });
-                growthObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    growthObserver.observe(growthAnimation);
-}
-
-// Magnetic Button Effect
-const buttons = document.querySelectorAll('.cta-button, .social-link');
-
-buttons.forEach(button => {
-    button.addEventListener('mousemove', (e) => {
-        const rect = button.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        
-        button.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-    });
-    
-    button.addEventListener('mouseleave', () => {
-        button.style.transform = 'translate(0, 0)';
-    });
-});
-
-// Skill Card Rotation Effect
-const skillCards = document.querySelectorAll('.skill-card');
-
-skillCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-        
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-    });
-    
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-    });
-});
-
-// Add revealing line animation on scroll
-const revealLines = document.querySelectorAll('.reveal-line');
-const lineObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => {
                 entry.target.classList.add('visible');
-            }, index * 100);
-        }
-    });
-}, { threshold: 0.5 });
-
-revealLines.forEach(line => lineObserver.observe(line));
-
-// Initialize
-initTheme();
-fetchGitHubProjects();
-
-// Add animation classes after page load
-window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-});
-
-// Performance optimization: Throttle scroll events
-let ticking = false;
-window.addEventListener('scroll', () => {
-    if (!ticking) {
-        window.requestAnimationFrame(() => {
-            updateScrollAnimations();
-            ticking = false;
-        });
-        ticking = true;
-    }
-});
-
-function updateScrollAnimations() {
-    const scrollPercentage = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-    document.documentElement.style.setProperty('--scroll-percentage', scrollPercentage);
-}
-
-// Easter egg: Konami code for special animation
-let konamiCode = [];
-const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-
-document.addEventListener('keydown', (e) => {
-    konamiCode.push(e.key);
-    konamiCode = konamiCode.slice(-10);
-    
-    if (konamiCode.join('') === konamiSequence.join('')) {
-        celebrateGrowth();
-    }
-});
-
-function celebrateGrowth() {
-    const colors = ['#4A7C59', '#7D5E3F', '#D4A574', '#A8C5D1'];
-    
-    for (let i = 0; i < 50; i++) {
-        setTimeout(() => {
-            const particle = document.createElement('div');
-            particle.style.position = 'fixed';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = '-20px';
-            particle.style.width = '10px';
-            particle.style.height = '10px';
-            particle.style.borderRadius = '50%';
-            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '10001';
-            particle.style.animation = 'fall 3s ease-out forwards';
-            
-            document.body.appendChild(particle);
-            
-            setTimeout(() => particle.remove(), 3000);
-        }, i * 50);
-    }
-    
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fall {
-            to {
-                transform: translateY(${window.innerHeight + 50}px) rotate(360deg);
-                opacity: 0;
             }
-        }
-    `;
-    document.head.appendChild(style);
-}
+        });
+    }, { threshold: 0.15 });
 
-// Add smooth reveal for sections
-const sections = document.querySelectorAll('section');
-const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // Navbar Scroll Effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
         }
     });
-}, { threshold: 0.1 });
 
-sections.forEach(section => {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(20px)';
-    section.style.transition = 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    sectionObserver.observe(section);
+    // GitHub Projects Fetching
+    async function fetchProjects() {
+        const username = 'appukannadiga';
+        const grid = document.getElementById('projectsGrid');
+        
+        try {
+            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const repos = await response.json();
+            
+            grid.innerHTML = ''; // Clear loader
+            
+            repos.forEach((repo, index) => {
+                const card = document.createElement('div');
+                card.className = 'project-card reveal-up';
+                card.style.transitionDelay = `${index * 0.1}s`;
+                
+                const description = repo.description || 'Modern software solution built with engineering excellence.';
+                const language = repo.language || 'Code';
+                
+                card.innerHTML = `
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        </div>
+                        <div class="project-links">
+                            <a href="${repo.html_url}" target="_blank" aria-label="GitHub Repository">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                            </a>
+                            ${repo.homepage ? `
+                            <a href="${repo.homepage}" target="_blank" aria-label="Live Demo">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 22 3 22 10"></polyline><line x1="10" y1="14" x2="22" y2="2"></line></svg>
+                            </a>` : ''}
+                        </div>
+                    </div>
+                    <div class="project-body">
+                        <h3 class="project-title">${repo.name.replace(/-/g, ' ')}</h3>
+                        <p class="project-description">${description}</p>
+                    </div>
+                    <div class="project-footer">
+                        <span class="project-tag">${language}</span>
+                        ${repo.stargazers_count > 0 ? `<span class="project-tag">⭐ ${repo.stargazers_count}</span>` : ''}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+                revealObserver.observe(card);
+            });
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            grid.innerHTML = '<p class="error-msg">Failed to load projects. Please visit <a href="https://github.com/appukannadiga" target="_blank">GitHub</a>.</p>';
+        }
+    }
+
+    fetchProjects();
+
+    // Smooth scroll for anchors
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Performance: Parallax for Hero
+    const mesh = document.querySelector('.mesh-gradient');
+    if (mesh) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            mesh.style.transform = `translateY(${scrolled * 0.3}px)`;
+        });
+    }
+
+    // Form Submission (Simulated)
+    const form = document.querySelector('.contact-form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button');
+            const originalText = btn.textContent;
+            btn.textContent = 'Message Sent!';
+            btn.style.backgroundColor = '#4ade80';
+            btn.style.color = '#000';
+            form.reset();
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+            }, 3000);
+        });
+    }
 });
