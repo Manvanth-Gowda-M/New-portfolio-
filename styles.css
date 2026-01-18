@@ -236,6 +236,19 @@ body::before {
     opacity: 0;
 }
 
+.theme-toggle {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    border-radius: 24px;
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
 @media (max-width: 768px) {
     .nav-links {
         gap: 1.5rem;
@@ -675,6 +688,34 @@ section {
 .project-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-lg);
+}
+
+/* Framer Motion Enhanced Project Cards */
+.project-card[data-framer-motion] {
+    will-change: transform, opacity, box-shadow;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.project-card[data-framer-motion]:hover {
+    z-index: 10;
+}
+
+.project-card[data-framer-motion] .project-image {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card[data-framer-motion]:hover .project-image {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.project-card[data-framer-motion] .project-link {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.project-card[data-framer-motion]:hover .project-link {
+    color: var(--accent-yellow);
+    transform: translateX(4px);
 }
 
 .project-card.loading {

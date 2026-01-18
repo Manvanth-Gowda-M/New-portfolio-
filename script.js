@@ -5,6 +5,19 @@ const html = document.documentElement;
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
+    
+    // Update theme toggle icon based on current theme
+    updateThemeToggleIcon(savedTheme);
+}
+
+function updateThemeToggleIcon(theme) {
+    if (theme === 'dark') {
+        themeToggle.querySelector('.sun-icon').style.display = 'inline';
+        themeToggle.querySelector('.moon-icon').style.display = 'none';
+    } else {
+        themeToggle.querySelector('.sun-icon').style.display = 'none';
+        themeToggle.querySelector('.moon-icon').style.display = 'inline';
+    }
 }
 
 themeToggle.addEventListener('click', () => {
@@ -13,6 +26,9 @@ themeToggle.addEventListener('click', () => {
     
     document.body.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
+    
+    // Update toggle icon
+    updateThemeToggleIcon(newTheme);
 });
 
 // Custom Cursor
@@ -188,7 +204,7 @@ function animateCounter(card) {
 
 // Fetch GitHub Projects
 async function fetchGitHubProjects() {
-    const username = 'appukannadiga';
+    const username = 'Manvanth-Gowda-M';
     const projectsGrid = document.getElementById('projectsGrid');
     
     try {
@@ -211,6 +227,9 @@ async function fetchGitHubProjects() {
             }, 100);
         });
         
+        // Initialize Framer Motion animations after projects are loaded
+        setTimeout(initFramerMotion, 200);
+        
     } catch (error) {
         console.error('Error fetching GitHub projects:', error);
         projectsGrid.innerHTML = `
@@ -232,6 +251,42 @@ function createProjectCard(repo, index) {
     const emojis = ['🌱', '🌿', '🌾', '🌳', '🍃', '🌻'];
     const emoji = emojis[index % emojis.length];
     
+    // Add Framer Motion attributes for animation
+    card.setAttribute('data-framer-motion', 'true');
+    card.setAttribute('data-framer-initial', 'hidden');
+    card.setAttribute('data-framer-animate', 'visible');
+    card.setAttribute('data-framer-variants', JSON.stringify({
+        hidden: { opacity: 0, y: 20, scale: 0.95, rotate: -2 },
+        visible: { opacity: 1, y: 0, scale: 1, rotate: 0 },
+        hover: {
+            y: -8,
+            scale: 1.02,
+            boxShadow: '0 12px 24px rgba(44, 62, 46, 0.15)',
+            transition: {
+                duration: 0.4,
+                ease: [0.175, 0.885, 0.32, 1.275]
+            }
+        }
+    }));
+    card.setAttribute('data-framer-transition', JSON.stringify({
+        duration: 0.6,
+        ease: [0.175, 0.885, 0.32, 1.275],
+        delay: index * 0.1
+    }));
+
+    // Add hover effects
+    card.addEventListener('mouseenter', () => {
+        if (typeof window.framerMotion !== 'undefined') {
+            window.framerMotion.animate(card, 'hover');
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        if (typeof window.framerMotion !== 'undefined') {
+            window.framerMotion.animate(card, 'visible');
+        }
+    });
+
     card.innerHTML = `
         <div class="project-image">${emoji}</div>
         <div class="project-content">
@@ -252,6 +307,50 @@ function createProjectCard(repo, index) {
     `;
     
     return card;
+}
+
+// Initialize Framer Motion for project cards
+function initFramerMotion() {
+    // Check if Framer Motion is loaded
+    if (typeof window.framerMotion !== 'undefined') {
+        // Auto-animate all elements with framer motion attributes
+        document.querySelectorAll('[data-framer-motion]').forEach(element => {
+            try {
+                const initial = element.getAttribute('data-framer-initial');
+                const animate = element.getAttribute('data-framer-animate');
+                const variants = JSON.parse(element.getAttribute('data-framer-variants'));
+                const transition = JSON.parse(element.getAttribute('data-framer-transition'));
+                
+                // Apply Framer Motion animation
+                window.framerMotion.animate(element, animate, {
+                    initial: initial,
+                    variants: variants,
+                    transition: transition
+                });
+                
+                // Set initial state
+                Object.assign(element.style, {
+                    opacity: 0,
+                    transform: 'translateY(20px) scale(0.95) rotate(-2deg)',
+                    transition: 'none'
+                });
+                
+                // Trigger animation after a small delay
+                setTimeout(() => {
+                    Object.assign(element.style, {
+                        opacity: 1,
+                        transform: 'translateY(0) scale(1) rotate(0)',
+                        transition: 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                    });
+                }, 100);
+                
+            } catch (error) {
+                console.error('Error initializing Framer Motion:', error);
+            }
+        });
+    } else {
+        console.warn('Framer Motion not loaded, falling back to CSS animations');
+    }
 }
 
 // Smooth Scroll for Navigation Links
