@@ -25,7 +25,7 @@
 - ✅ **Magnetic Effects**: Subtle movement on buttons and icons for desktop.
 
 ### 📂 Content & Integration
-- ✅ **GitHub API**: Dynamic project fetching from `@appukannadiga`.
+- ✅ **GitHub API**: Dynamic project fetching from `@Manvanth-Gowda-M`.
 - ✅ **Skills Grid**: Animated expertise cards.
 - ✅ **Creative Book Link**: Seamless integration with `manvanth.vercel.app`.
 - ✅ **Social Connectivity**: Animated icons for LinkedIn, GitHub, and Instagram.

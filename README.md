@@ -27,7 +27,7 @@ This portfolio represents **Manvanth Gowda M**, focusing on the intersection of 
 
 ### 🛠️ Technical Excellence
 - **Vanilla JavaScript**: Zero heavy frameworks, ensuring blazing-fast load times.
-- **GitHub Integration**: Dynamic project fetching directly from [@appukannadiga](https://github.com/appukannadiga).
+- **GitHub Integration**: Dynamic project fetching directly from [@Manvanth-Gowda-M](https://github.com/Manvanth-Gowda-M).
 - **Responsive Layout**: Mobile-first CSS with modern grid and flexbox.
 - **Accessibility**: Respects `prefers-reduced-motion` and semantic HTML standards.
 
@@ -50,7 +50,7 @@ This portfolio represents **Manvanth Gowda M**, focusing on the intersection of 
 ## 📱 Links
 
 - **LinkedIn**: [Manvanth Gowda M](https://www.linkedin.com/in/manvanth-gowda-m-50288039b)
-- **GitHub**: [@appukannadiga](https://github.com/appukannadiga)
+- **GitHub**: [@Manvanth-Gowda-M](https://github.com/Manvanth-Gowda-M)
 - **Instagram**: [@appu_kannadigaa](https://www.instagram.com/appu_kannadigaa)
 - **Creative Portfolio**: [manvanth.vercel.app](https://manvanth.vercel.app/)
 - **Email**: [appumanu3214@gmail.com](mailto:appumanu3214@gmail.com)
