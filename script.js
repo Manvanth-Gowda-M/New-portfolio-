@@ -109,23 +109,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GitHub Projects Fetching with Error Handling
     async function fetchProjects() {
-        const username = 'Manvanth-Gowda-M';
+        const repoFullNames = [
+            'NextGenXplorer/NutriGuideFLU',
+            'Manvanth-Gowda-M/SmartResource1',
+            'NextGenXplorer/Kannadakey',
+            'Manvanth-Gowda-M/Prompt-enhancer',
+            'Manvanth-Gowda-M/FusionbotX-',
+            'Manvanth-Gowda-M/Reshme_Info_collegeproj'
+        ];
         const grid = document.getElementById('projectsGrid');
         
         try {
-            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-            if (!response.ok) {
-                // Create fallback projects if API fails
-                createFallbackProjects(grid);
-                return;
-            }
+            const repoPromises = repoFullNames.map(name => 
+                fetch(`https://api.github.com/repos/${name}`).then(res => {
+                    if (!res.ok) throw new Error(`Failed to fetch ${name}`);
+                    return res.json();
+                })
+            );
             
-            const repos = await response.json();
-            
-            if (!repos || repos.length === 0) {
-                createFallbackProjects(grid);
-                return;
-            }
+            const repos = await Promise.all(repoPromises);
             
             grid.innerHTML = ''; // Clear loader
             
@@ -133,11 +135,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = createProjectCard(repo, index);
                 grid.appendChild(card);
                 revealObserver.observe(card);
+                
+                // Add "motion" effect (tilt)
+                addMotionEffect(card);
             });
         } catch (error) {
             console.error('Error fetching projects:', error);
             createFallbackProjects(grid);
         }
+    }
+
+    function addMotionEffect(card) {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Update CSS variables for shine effect
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+
+            if (window.innerWidth < 768) return; // Skip tilt on mobile
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 12;
+            const rotateY = (centerX - x) / 12;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+        });
     }
 
     function createProjectCard(repo, index) {
@@ -188,24 +219,45 @@ document.addEventListener('DOMContentLoaded', () => {
     function createFallbackProjects(grid) {
         const fallbackProjects = [
             {
-                name: 'GitHub Projects',
-                description: 'Explore my latest work and live projects directly on GitHub.',
-                language: 'GitHub',
-                html_url: 'https://github.com/Manvanth-Gowda-M?tab=repositories',
+                name: 'NutriGuideFLU',
+                description: 'A comprehensive nutrition guide application built with Flutter.',
+                language: 'Flutter',
+                html_url: 'https://github.com/NextGenXplorer/NutriGuideFLU',
                 homepage: ''
             },
             {
-                name: 'Featured Repositories',
-                description: 'A curated set of repositories showcasing my development journey and skills.',
-                language: 'Code',
-                html_url: 'https://github.com/Manvanth-Gowda-M',
+                name: 'SmartResource1',
+                description: 'Intelligent resource management system for optimized performance.',
+                language: 'Python',
+                html_url: 'https://github.com/Manvanth-Gowda-M/SmartResource1',
                 homepage: ''
             },
             {
-                name: 'Open Source & Experiments',
-                description: 'Projects, experiments, and learning builds — updated regularly.',
-                language: 'Builds',
-                html_url: 'https://github.com/Manvanth-Gowda-M',
+                name: 'Kannadakey',
+                description: 'Specialized keyboard and input solution for Kannada language.',
+                language: 'Java',
+                html_url: 'https://github.com/NextGenXplorer/Kannadakey',
+                homepage: ''
+            },
+            {
+                name: 'Prompt-enhancer',
+                description: 'AI-driven tool to refine and optimize prompts for better LLM results.',
+                language: 'JavaScript',
+                html_url: 'https://github.com/Manvanth-Gowda-M/Prompt-enhancer',
+                homepage: ''
+            },
+            {
+                name: 'FusionbotX-',
+                description: 'Advanced multi-functional bot for seamless automation.',
+                language: 'Python',
+                html_url: 'https://github.com/Manvanth-Gowda-M/FusionbotX-',
+                homepage: ''
+            },
+            {
+                name: 'Reshme_Info_collegeproj',
+                description: 'Educational college project providing detailed silk industry information.',
+                language: 'PHP',
+                html_url: 'https://github.com/Manvanth-Gowda-M/Reshme_Info_collegeproj',
                 homepage: ''
             }
         ];
@@ -216,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = createProjectCard(project, index);
             grid.appendChild(card);
             revealObserver.observe(card);
+            addMotionEffect(card);
         });
     }
 
