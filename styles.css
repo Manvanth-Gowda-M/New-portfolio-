@@ -686,7 +686,7 @@ h1, h2, h3, h4 {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 24px;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid var(--border);
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), 
                 border-color 0.4s ease, 
@@ -696,7 +696,13 @@ h1, h2, h3, h4 {
     flex-direction: column;
     position: relative;
     transform-style: preserve-3d;
-    will-change: transform;
+    will-change: transform, opacity;
+    perspective: 1000px;
+    opacity: 0;
+}
+
+.project-card.animated {
+    opacity: 1;
 }
 
 .project-card:hover {
@@ -728,37 +734,51 @@ h1, h2, h3, h4 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    z-index: 2;
+    position: relative;
 }
 
 .project-icon {
     width: 40px;
     height: 40px;
     color: var(--accent);
+    transform-origin: center;
+    will-change: transform, opacity;
 }
 
 .project-links {
     display: flex;
     gap: 1rem;
+    z-index: 3;
 }
 
-.project-links a:hover {
+.project-link-icon {
+    transition: var(--transition);
+}
+
+.project-link-icon:hover {
     color: var(--accent);
+    transform: scale(1.15);
 }
 
 .project-body {
     padding: 0 2rem 2rem;
     flex-grow: 1;
+    z-index: 2;
+    position: relative;
 }
 
 .project-title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    will-change: opacity, transform;
 }
 
 .project-description {
     color: var(--text-secondary);
     font-size: 0.95rem;
     margin-bottom: 1.5rem;
+    will-change: opacity, transform;
 }
 
 .project-footer {
@@ -766,6 +786,8 @@ h1, h2, h3, h4 {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    z-index: 2;
+    position: relative;
 }
 
 .project-tag {
@@ -775,6 +797,28 @@ h1, h2, h3, h4 {
     background-color: var(--bg-accent);
     padding: 0.25rem 0.75rem;
     border-radius: 100px;
+    will-change: opacity, transform;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.project-tag:hover {
+    background-color: rgba(var(--bg-primary-rgb), 0.8);
+    color: var(--accent);
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .project-card {
+        transition: none;
+        animation: none;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    
+    .project-card * {
+        transition: none;
+        animation: none;
+    }
 }
 
 .project-loader {
