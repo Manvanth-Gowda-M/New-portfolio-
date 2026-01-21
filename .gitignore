@@ -40,6 +40,7 @@ build/
 # Logs
 logs/
 *.log
+server.log
 
 # Temporary Files
 tmp/

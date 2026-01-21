@@ -134,11 +134,13 @@ document.addEventListener('DOMContentLoaded', () => {
             repos.forEach((repo, index) => {
                 const card = createProjectCard(repo, index);
                 grid.appendChild(card);
-                revealObserver.observe(card);
                 
                 // Add "motion" effect (tilt)
                 addMotionEffect(card);
             });
+
+            // Apply beautiful Framer Motion-style animations using Motion One
+            animateProjectCards();
         } catch (error) {
             console.error('Error fetching projects:', error);
             createFallbackProjects(grid);
@@ -173,9 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createProjectCard(repo, index) {
         const card = document.createElement('div');
-        card.className = 'project-card reveal-up';
-        card.style.transitionDelay = `${index * 0.1}s`;
+        card.className = 'project-card';
         card.style.cursor = 'pointer';
+        card.dataset.index = index;
         
         const description = repo.description || 'Modern software solution built with engineering excellence.';
         const language = repo.language || 'Code';
@@ -267,9 +269,187 @@ document.addEventListener('DOMContentLoaded', () => {
         fallbackProjects.forEach((project, index) => {
             const card = createProjectCard(project, index);
             grid.appendChild(card);
-            revealObserver.observe(card);
             addMotionEffect(card);
         });
+
+        // Apply animations after fallback projects are loaded
+        animateProjectCards();
+    }
+
+    // Beautiful Framer Motion-style animations using Motion One
+    function animateProjectCards() {
+        const cards = document.querySelectorAll('.project-card');
+        
+        if (!cards.length) return;
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (prefersReducedMotion) {
+            // Respect user's preference - show cards immediately without animation
+            cards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'none';
+            });
+            return;
+        }
+
+        // Check if Motion library is loaded
+        if (typeof Motion === 'undefined') {
+            console.warn('Motion library not loaded, using fallback animation');
+            // Fallback: simple opacity animation
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            return;
+        }
+
+        const isMobile = window.innerWidth < 768;
+
+        // Set initial state for all cards
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            // Simpler animation for mobile performance
+            if (isMobile) {
+                card.style.transform = 'translateY(40px) scale(0.95)';
+            } else {
+                card.style.transform = 'translateY(80px) scale(0.9) rotateX(10deg)';
+            }
+        });
+
+        // Use Motion One's stagger API for beautiful sequential animations
+        Motion.animate(
+            '.project-card',
+            {
+                opacity: [0, 1],
+                transform: isMobile 
+                    ? [
+                        'translateY(40px) scale(0.95)',
+                        'translateY(0px) scale(1)'
+                    ]
+                    : [
+                        'translateY(80px) scale(0.9) rotateX(10deg)',
+                        'translateY(0px) scale(1) rotateX(0deg)'
+                    ],
+                filter: isMobile ? undefined : ['blur(10px)', 'blur(0px)']
+            },
+            {
+                duration: isMobile ? 0.6 : 0.8,
+                delay: Motion.stagger(0.12, { start: 0.2 }),
+                easing: [0.22, 0.61, 0.36, 1] // Custom cubic-bezier for smooth motion
+            }
+        );
+
+        // Animate individual card elements with stagger (only on desktop for performance)
+        if (!isMobile) {
+            cards.forEach((card, cardIndex) => {
+                const icon = card.querySelector('.project-icon');
+                const title = card.querySelector('.project-title');
+                const description = card.querySelector('.project-description');
+                const footer = card.querySelector('.project-footer');
+                
+                // Animate card internals with additional stagger
+                const cardDelay = 0.2 + (cardIndex * 0.12);
+                
+                if (icon) {
+                    Motion.animate(
+                        icon,
+                        {
+                            scale: [0.5, 1.1, 1],
+                            rotate: [0, 10, 0],
+                            opacity: [0, 1]
+                        },
+                        {
+                            duration: 0.6,
+                            delay: cardDelay + 0.1,
+                            easing: [0.34, 1.56, 0.64, 1] // Spring-like easing
+                        }
+                    );
+                }
+                
+                if (title) {
+                    Motion.animate(
+                        title,
+                        {
+                            opacity: [0, 1],
+                            x: [-20, 0]
+                        },
+                        {
+                            duration: 0.5,
+                            delay: cardDelay + 0.2,
+                            easing: 'ease-out'
+                        }
+                    );
+                }
+                
+                if (description) {
+                    Motion.animate(
+                        description,
+                        {
+                            opacity: [0, 1],
+                            y: [10, 0]
+                        },
+                        {
+                            duration: 0.5,
+                            delay: cardDelay + 0.3,
+                            easing: 'ease-out'
+                        }
+                    );
+                }
+                
+                if (footer) {
+                    const tags = footer.querySelectorAll('.project-tag');
+                    if (tags.length > 0) {
+                        Motion.animate(
+                            tags,
+                            {
+                                opacity: [0, 1],
+                                scale: [0.8, 1],
+                                y: [10, 0]
+                            },
+                            {
+                                duration: 0.4,
+                                delay: Motion.stagger(0.08, { start: cardDelay + 0.4 }),
+                                easing: 'ease-out'
+                            }
+                        );
+                    }
+                }
+            });
+        }
+
+        // Add scroll-triggered animations for cards that might be below fold
+        const scrollObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.target.style.opacity === '0') {
+                        const index = parseInt(entry.target.dataset.index || 0);
+                        
+                        Motion.animate(
+                            entry.target,
+                            {
+                                opacity: [0, 1],
+                                transform: [
+                                    'translateY(60px) scale(0.95)',
+                                    'translateY(0px) scale(1)'
+                                ]
+                            },
+                            {
+                                duration: 0.7,
+                                delay: index * 0.1,
+                                easing: [0.22, 0.61, 0.36, 1]
+                            }
+                        );
+                    }
+                });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        );
+
+        cards.forEach(card => scrollObserver.observe(card));
     }
 
     fetchProjects();
